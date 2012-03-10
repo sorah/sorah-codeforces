@@ -7,13 +7,16 @@ messages_raw.each do |message|
   _ = [message[:from],message[:to]]
   a = _.sort
   if messages[_]
-    t = message[:time] - messages[_]
-    messages.delete a
-    if 0 < t && t <= d
-      friends << a
+    messages[_].each do |old|
+      t = message[:time] - old
+      if 0 < t && t <= d
+        messages.delete a
+        friends << a
+      end
     end
   end
-  messages[_.reverse] = message[:time]
+  messages[_.reverse] ||= []
+  messages[_.reverse] << message[:time]
 end
 friends.uniq!
 
